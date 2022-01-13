@@ -1,0 +1,12 @@
+{
+  "Axe": {
+    "ItemCategory": "Tool",
+    "StackSize": 1,
+    "Description": "Used to chop trees."
+  },
+  "Wood": {
+    "ItemCategory": "Resource",
+    "StackSize": 25,
+    "Description": "Used for crafting and building."
+  }
+}

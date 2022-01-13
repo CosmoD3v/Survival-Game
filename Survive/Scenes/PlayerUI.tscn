@@ -1,0 +1,86 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Sprites/HealthBorder.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/Inventory.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/WaterBorder.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/FoodBorder.png" type="Texture" id=4]
+
+[node name="PlayerUI" type="Node2D"]
+z_index = 100
+
+[node name="Inventory" parent="." instance=ExtResource( 2 )]
+position = Vector2( -490, 22 )
+
+[node name="BarGrid" type="GridContainer" parent="."]
+margin_left = -350.0
+margin_top = -50.0
+margin_right = 350.0
+margin_bottom = -20.0
+custom_constants/vseparation = 0
+custom_constants/hseparation = 50
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Health" type="ReferenceRect" parent="BarGrid"]
+margin_right = 200.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 200, 30 )
+
+[node name="HealthBorder" type="Sprite" parent="BarGrid/Health"]
+position = Vector2( 100, 15 )
+texture = ExtResource( 1 )
+
+[node name="HealthGauge" type="ColorRect" parent="BarGrid/Health/HealthBorder"]
+margin_left = -97.0
+margin_top = -12.0
+margin_right = 97.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 194, 24 )
+color = Color( 0.847059, 0.176471, 0.188235, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Water" type="ReferenceRect" parent="BarGrid"]
+margin_left = 250.0
+margin_right = 450.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 200, 30 )
+
+[node name="WaterBorder" type="Sprite" parent="BarGrid/Water"]
+position = Vector2( 100, 15 )
+texture = ExtResource( 3 )
+
+[node name="WaterGauge" type="ColorRect" parent="BarGrid/Water/WaterBorder"]
+margin_left = -97.0
+margin_top = -12.0
+margin_right = 97.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 194, 24 )
+color = Color( 0.172549, 0.396078, 0.839216, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Food" type="ReferenceRect" parent="BarGrid"]
+margin_left = 500.0
+margin_right = 700.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 200, 30 )
+
+[node name="FoodBorder" type="Sprite" parent="BarGrid/Food"]
+position = Vector2( 100, 15 )
+texture = ExtResource( 4 )
+
+[node name="FoodGauge" type="ColorRect" parent="BarGrid/Food/FoodBorder"]
+margin_left = -97.0
+margin_top = -12.0
+margin_right = 97.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 194, 24 )
+color = Color( 0.839216, 0.47451, 0.172549, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

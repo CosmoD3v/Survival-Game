@@ -1,0 +1,12 @@
+{
+  "Pink": {
+    "ItemCategory": "Block",
+    "StackSize": 50,
+    "Description": "Pinky."
+  },
+  "Pale": {
+    "ItemCategory": "Block",
+    "StackSize": 25,
+    "Description": "Sheesh it's pale."
+  }
+}
