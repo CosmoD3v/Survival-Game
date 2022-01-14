@@ -68,4 +68,5 @@ __meta__ = {
 }
 
 [connection signal="button_up" from="MenuGrid/Play" to="MenuGrid" method="_on_Play_button_up"]
+[connection signal="button_up" from="MenuGrid/Options" to="MenuGrid" method="_on_Options_button_up"]
 [connection signal="button_up" from="MenuGrid/Quit" to="MenuGrid" method="_on_Quit_button_up"]

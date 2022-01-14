@@ -1,6 +1,7 @@
 extends Node
 
 const PLAYER_DIR = "user://Players/"
+const WORLD_DIR = "user://Worlds/"
 
 var player: String
 var inventory: Dictionary
@@ -10,8 +11,12 @@ var scene = null
 
 # Initialize important game data
 func _ready() -> void:
-	scene = get_tree().current_scene
+	scene = "MainMenu"
 	itemData = load_item_data("res://Data/ItemData.json")
+
+func change_scene(newScene):
+	var _temp = get_tree().change_scene("res://Scenes/" + newScene + ".tscn")
+	scene = newScene
 
 # Reads the item data from the disk and provides its data
 func load_item_data(filePath):
@@ -26,6 +31,8 @@ func load_item_data(filePath):
 func get_character_names():
 	var characters = []
 	var dir = Directory.new()
+	if !dir.dir_exists(PLAYER_DIR):
+		 dir.make_dir(PLAYER_DIR)
 	if dir.open(PLAYER_DIR) == OK:
 		dir.list_dir_begin()
 		var fileName = dir.get_next()

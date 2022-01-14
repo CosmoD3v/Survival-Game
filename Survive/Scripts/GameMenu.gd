@@ -12,4 +12,4 @@ func _on_Resume_button_up() -> void:
 
 func _on_Quit_button_up() -> void:
 	Game.save_user_data()
-	Game.scene = get_tree().change_scene("res://Scenes/MainMenu.tscn")
+	Game.change_scene("MainMenu")

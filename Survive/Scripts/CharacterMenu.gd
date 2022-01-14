@@ -50,6 +50,4 @@ func _on_Accept_button_up() -> void:
 		pass
 
 func _on_Back_button_up() -> void:
-# warning-ignore:return_value_discarded
-	Game.scene = get_tree().change_scene("res://Scenes/MainMenu.tscn")
-	pass
+	Game.change_scene("MainMenu")
