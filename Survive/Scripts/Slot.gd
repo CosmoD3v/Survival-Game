@@ -13,8 +13,8 @@ func init():
 	if Game.inventory.has(slotIndex):
 		item = ItemClass.instance()
 		add_child(item)
-		item.init(Game.inventory[slotIndex][0],
-			Game.inventory[slotIndex][1])
+		item.init(Game.inventory[slotIndex]["ItemName"],
+			Game.inventory[slotIndex]["ItemQuantity"])
 		item.position = Vector2(8, 8)
 
 # Used for updating the item stored in this slot

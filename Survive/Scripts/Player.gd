@@ -50,9 +50,10 @@ func apply_movement(acceleration):
 # Updates the sprite based on hotbar
 func set_hand_item():
 	if Game.inventory.has(Game.hotbarSelected):
-		var itemCategory = Game.itemData.get(Game.inventory[Game.hotbarSelected][0]).get("ItemCategory")
+		var itemName = Game.inventory[Game.hotbarSelected]["ItemName"]
+		var itemCategory = Game.itemData[itemName]["ItemCategory"]
 		if itemCategory == "Tool":
-			$Sprite/ItemArea/ItemSprite.texture = load("res://Sprites/" + Game.inventory[Game.hotbarSelected][0] + ".png")
+			$Sprite/ItemArea/ItemSprite.texture = Game.itemData[itemName]["Sprite"]
 			return
 	$Sprite/ItemArea/ItemSprite.texture = null
 	tween.remove($Sprite/ItemArea, "rotation_degrees")

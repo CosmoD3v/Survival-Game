@@ -24,8 +24,11 @@ func load_item_data(filePath):
 	var fileData = File.new()
 	fileData.open(filePath, File.READ)
 	jsonData = JSON.parse(fileData.get_as_text())
+	var data = jsonData.result
 	fileData.close()
-	return jsonData.result
+	for item in data:
+		data[item]["Sprite"] = load("res://Sprites/" + item + ".png")
+	return data
 
 # Returns a list of the names of characters existing on the computer
 func get_character_names():
@@ -48,7 +51,10 @@ func create_new_character(id):
 	if file.open(PLAYER_DIR + id + ".json", File.WRITE) == OK:
 		var data = {
 			"inventory" : {
-				0 : ["Axe", 1]
+				0 : {
+					"ItemName" : "Axe",
+					"ItemQuantity" : 1
+				}
 			}
 		}
 		file.store_var(data)

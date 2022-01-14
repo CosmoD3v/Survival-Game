@@ -22,16 +22,16 @@ func update_inventory():
 	var slots = inventorySlots.get_children()
 	for i in range(slots.size()):
 		if Game.inventory.has(i):
-			slots[i].update_item(Game.inventory[i][0], Game.inventory[i][1])
+			slots[i].update_item(Game.inventory[i]["ItemName"], Game.inventory[i]["ItemQuantity"])
 
 # Call when an item needs to be collected by the player
 func add_item(itemName, itemQuantity):
 	for item in Game.inventory:
-		if Game.inventory[item][0] == itemName:
+		if Game.inventory[item]["ItemName"] == itemName:
 			var stackSize = int(Game.itemData[itemName]["StackSize"])
-			var ableToAdd = stackSize - Game.inventory[item][1]
+			var ableToAdd = stackSize - Game.inventory[item]["ItemQuantity"]
 			if ableToAdd >= itemQuantity:
-				Game.inventory[item][1] += itemQuantity
+				Game.inventory[item]["ItemQuantity"] += itemQuantity
 				update_inventory()
 				return
 			else:
@@ -41,20 +41,26 @@ func add_item(itemName, itemQuantity):
 	# Item doesn't exist in inventory yet, so add it to an empty slot
 	for i in range(NUM_INVENTORY_SLOTS):
 		if Game.inventory.has(i) == false:
-			Game.inventory[i] = [itemName, itemQuantity]
+			Game.inventory[i] = {
+				"ItemName" : itemName,
+				"ItemQuantity" : itemQuantity
+			}
 			update_inventory()
 			return
 
 # Controls data within the Game Singleton
 func add_item_to_empty_slot(item: itemClass, slot: slotClass):
-	Game.inventory[slot.slotIndex] = [item.itemName, item.itemQuantity]
+	Game.inventory[slot.slotIndex] = {
+		"ItemName" : item.itemName,
+		"ItemQuantity" : item.itemQuantity
+	}
 
 func remove_item(slot: slotClass):
 # warning-ignore:return_value_discarded
 	Game.inventory.erase(slot.slotIndex)
 
 func add_item_quantity(slot: slotClass, quantityToAdd: int):
-	Game.inventory[slot.slotIndex][1] += quantityToAdd
+	Game.inventory[slot.slotIndex]["ItemQuantity"] += quantityToAdd
 
 # Called when user clicks on the inventory
 func slot_gui_input(event: InputEvent, slot: slotClass):
@@ -68,7 +74,7 @@ func slot_gui_input(event: InputEvent, slot: slotClass):
 			else:
 				if slot.item:
 					pull_item_out(slot)
-	player.set_hand_item()
+			player.set_hand_item()
 
 # warning-ignore:unused_argument
 func swap_stack_items(event, slot):

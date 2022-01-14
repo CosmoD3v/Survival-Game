@@ -11,7 +11,7 @@ func init(name, quantity):
 	var stackSize
 	itemName = name
 	itemQuantity = quantity
-	$Texture.texture = load("res://Sprites/" + itemName + ".png")
+	$Texture.texture = Game.itemData[itemName]["Sprite"]
 	stackSize = int(Game.itemData[itemName]["StackSize"])
 	
 	if stackSize == 1:

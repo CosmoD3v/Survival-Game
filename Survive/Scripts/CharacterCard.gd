@@ -9,7 +9,7 @@ func init(name):
 
 func _on_Play_button_up() -> void:
 	Game.load_user_data(CharacterName)
-	Game.set_scene("World")
+	Game.change_scene("World")
 
 func _on_Delete_button_up() -> void:
 	Game.delete_existing_character(CharacterName)

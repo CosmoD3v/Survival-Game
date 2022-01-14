@@ -8,10 +8,10 @@
 [node name="Player" parent="." instance=ExtResource( 1 )]
 
 [node name="Tree" parent="." instance=ExtResource( 2 )]
-position = Vector2( 340, -132 )
+position = Vector2( -239, -163 )
 
 [node name="Tree2" parent="." instance=ExtResource( 2 )]
-position = Vector2( 120, 355 )
+position = Vector2( 260, -89 )
 
 [node name="Tree3" parent="." instance=ExtResource( 2 )]
-position = Vector2( -282, 6 )
+position = Vector2( -142, 294 )

@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/Resource.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 100, 100 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 92.0489
+
+[node name="Resource" type="StaticBody2D"]
+scale = Vector2( 0.75, 0.75 )
+script = ExtResource( 2 )
+
+[node name="InteractArea" type="Area2D" parent="."]
+visible = false
+
+[node name="Area" type="CollisionShape2D" parent="InteractArea"]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 2 )
+
+[node name="SpriteTween" type="Tween" parent="."]
+
+[connection signal="tween_completed" from="SpriteTween" to="." method="_on_SpriteTween_tween_completed"]
