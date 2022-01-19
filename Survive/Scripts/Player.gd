@@ -8,14 +8,18 @@ const SWING_MIN = 90
 const SWING_MAX = 45
 onready var swing_timer = $Sprite/ItemArea/SwingTimer
 onready var tween = $Sprite/ItemArea/SwingAnimation
-onready var inventory = $PlayerUI/Inventory
+onready var inventoryNode = $PlayerUI/Inventory
+var worldNode : Node
 var allowAction = true
 
-func _ready() -> void:
-	pass
+func init():
+	worldNode = get_parent().get_parent()
+	worldNode.prepare_chunks(position)
+	inventoryNode.init()
 
 # Rotate player sprite to face mouse and check for input
 func _process(_delta: float) -> void:
+	worldNode.update_chunks(position)
 	$Sprite.look_at(get_global_mouse_position())
 	if Input.is_action_pressed("ui_use_hand") && allowAction:
 		swing_hand()
@@ -49,8 +53,8 @@ func apply_movement(acceleration):
 
 # Updates the sprite based on hotbar
 func set_hand_item():
-	if Game.inventory.has(Game.hotbarSelected):
-		var itemName = Game.inventory[Game.hotbarSelected]["ItemName"]
+	if inventoryNode.inventory.has(inventoryNode.hotbarSelected):
+		var itemName = inventoryNode.inventory[inventoryNode.hotbarSelected]["ItemName"]
 		var itemCategory = Game.itemData[itemName]["ItemCategory"]
 		if itemCategory == "Tool":
 			$Sprite/ItemArea/ItemSprite.texture = Game.itemData[itemName]["Sprite"]
@@ -72,12 +76,12 @@ func swing_hand_back():
 		tween.interpolate_property($Sprite/ItemArea, "rotation_degrees", SWING_MAX, SWING_MIN, SWING_TIME / 2, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		tween.start()
 		for area in $Sprite/ItemArea.get_overlapping_areas():
-			var object = area.get_parent()
-			if object.has_meta("type"):
-				var resource = object.get_meta("type")
+			if area.has_meta("Type"):
+				var resource = area.get_meta("Type")
+				var areaNode = area.get_parent()
 				match resource:
-					"resource":
-						object.collect_resource(self, inventory)
+					"Resource":
+						areaNode.collect_resource(self, inventoryNode)
 					_:
 						print("not a resource")
 

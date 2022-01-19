@@ -1,7 +1,7 @@
 extends Control
 
-var CharacterCard = preload("res://Scenes/CharacterCard.tscn")
-onready var CharacterList = $SelectMenu/Scroll/CharacterList
+onready var characterList = $SelectMenu/Scroll/CharacterList
+var characterCard = preload("res://Scenes/CharacterCard.tscn")
 
 func _ready() -> void:
 	create_list()
@@ -9,14 +9,14 @@ func _ready() -> void:
 # Updates the character list based on the player save files
 func create_list():
 	$SelectMenu/Scroll.scroll_vertical = 0
-	for child in CharacterList.get_children():
-		CharacterList.remove_child(child)
+	for child in characterList.get_children():
+		characterList.remove_child(child)
 		child.queue_free()
 	var names = Game.get_character_names()
 	for name in names:
-		var card = CharacterCard.instance()
+		var card = characterCard.instance()
+		characterList.add_child(card)
 		card.init(name)
-		CharacterList.add_child(card)
 
 func show_select():
 	$SelectMenu.visible = true

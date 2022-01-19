@@ -1,17 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Scenes/Tree.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/World.gd" type="Script" id=2]
 
 [node name="World" type="Node2D"]
+script = ExtResource( 2 )
 
-[node name="Player" parent="." instance=ExtResource( 1 )]
+[node name="Players" type="Node2D" parent="."]
 
-[node name="Tree" parent="." instance=ExtResource( 2 )]
-position = Vector2( -239, -163 )
-
-[node name="Tree2" parent="." instance=ExtResource( 2 )]
-position = Vector2( 260, -89 )
-
-[node name="Tree3" parent="." instance=ExtResource( 2 )]
-position = Vector2( -142, 294 )
+[node name="Objects" type="Node2D" parent="."]

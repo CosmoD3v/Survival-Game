@@ -6,10 +6,14 @@ const NUM_INVENTORY_SLOTS = 9
 onready var inventorySlots = $SlotGrid
 onready var player = get_parent().get_parent()
 onready var slotOffset = ($SlotGrid/Slot1.get_combined_minimum_size() / 2) - Vector2(8, 8)
+var inventory: Dictionary
+var hotbarSelected: int
 var mouseItem = null
 
 # Initialize hotbar and inventory
-func _ready() -> void:
+func init() -> void:
+	inventory = Game.load_user_data()
+	hotbarSelected = 0
 	update_hotbar()
 	var slots = inventorySlots.get_children()
 	for i in range(slots.size()):
@@ -21,27 +25,27 @@ func _ready() -> void:
 func update_inventory():
 	var slots = inventorySlots.get_children()
 	for i in range(slots.size()):
-		if Game.inventory.has(i):
-			slots[i].update_item(Game.inventory[i]["ItemName"], Game.inventory[i]["ItemQuantity"])
+		if inventory.has(i):
+			slots[i].update_item(inventory[i]["ItemName"], inventory[i]["ItemQuantity"])
 
 # Call when an item needs to be collected by the player
 func add_item(itemName, itemQuantity):
-	for item in Game.inventory:
-		if Game.inventory[item]["ItemName"] == itemName:
+	for item in inventory:
+		if inventory[item]["ItemName"] == itemName:
 			var stackSize = int(Game.itemData[itemName]["StackSize"])
-			var ableToAdd = stackSize - Game.inventory[item]["ItemQuantity"]
+			var ableToAdd = stackSize - inventory[item]["ItemQuantity"]
 			if ableToAdd >= itemQuantity:
-				Game.inventory[item]["ItemQuantity"] += itemQuantity
+				inventory[item]["ItemQuantity"] += itemQuantity
 				update_inventory()
 				return
 			else:
-				Game.inventory[item][1] += ableToAdd
+				inventory[item][1] += ableToAdd
 				itemQuantity -= ableToAdd
-
+	
 	# Item doesn't exist in inventory yet, so add it to an empty slot
 	for i in range(NUM_INVENTORY_SLOTS):
-		if Game.inventory.has(i) == false:
-			Game.inventory[i] = {
+		if inventory.has(i) == false:
+			inventory[i] = {
 				"ItemName" : itemName,
 				"ItemQuantity" : itemQuantity
 			}
@@ -50,17 +54,17 @@ func add_item(itemName, itemQuantity):
 
 # Controls data within the Game Singleton
 func add_item_to_empty_slot(item: itemClass, slot: slotClass):
-	Game.inventory[slot.slotIndex] = {
+	inventory[slot.slotIndex] = {
 		"ItemName" : item.itemName,
 		"ItemQuantity" : item.itemQuantity
 	}
 
 func remove_item(slot: slotClass):
 # warning-ignore:return_value_discarded
-	Game.inventory.erase(slot.slotIndex)
+	inventory.erase(slot.slotIndex)
 
 func add_item_quantity(slot: slotClass, quantityToAdd: int):
-	Game.inventory[slot.slotIndex]["ItemQuantity"] += quantityToAdd
+	inventory[slot.slotIndex]["ItemQuantity"] += quantityToAdd
 
 # Called when user clicks on the inventory
 func slot_gui_input(event: InputEvent, slot: slotClass):
@@ -116,19 +120,19 @@ func pull_item_out(slot):
 # Used for updating which slot the user has selected
 func update_hotbar(direction = null):
 	var slots = inventorySlots.get_children()
-	slots[Game.hotbarSelected].self_modulate = Color(1,1,1)
+	slots[hotbarSelected].self_modulate = Color(1,1,1)
 	match direction:
 		"forward":
-			if Game.hotbarSelected < NUM_INVENTORY_SLOTS - 1:
-				Game.hotbarSelected += 1
+			if hotbarSelected < NUM_INVENTORY_SLOTS - 1:
+				hotbarSelected += 1
 			else:
-				Game.hotbarSelected = 0
+				hotbarSelected = 0
 		"backward":
-			if Game.hotbarSelected > 0:
-				Game.hotbarSelected -= 1
+			if hotbarSelected > 0:
+				hotbarSelected -= 1
 			else:
-				Game.hotbarSelected = NUM_INVENTORY_SLOTS - 1
-	slots[Game.hotbarSelected].self_modulate = Color(.9,.75,.27)
+				hotbarSelected = NUM_INVENTORY_SLOTS - 1
+	slots[hotbarSelected].self_modulate = Color(.9,.75,.27)
 	player.set_hand_item()
 
 # Updates visual for hotbar and items held within the mouse

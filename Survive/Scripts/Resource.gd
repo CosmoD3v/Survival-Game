@@ -8,15 +8,19 @@ var currentResource = resourceCap
 var hit = false
 
 func _ready() -> void:
-	set_meta('type', 'resource')
+	$InteractArea.set_meta("Type", "Resource")
+	addMeta()
 
-# Called by player when this object is harvested
-func collect_resource(player, inventory):
-	knockback(player)
-	harvest(inventory)
+func addMeta():
+	pass
 
 func harvest(_inventory):
 	pass
+
+# Called by player when this object is harvested
+func collect_resource(playerNode : Node, inventoryNode : Node):
+	knockback(playerNode)
+	harvest(inventoryNode)
 
 # Start animation for when the player hits the object
 func knockback(player):

@@ -1,13 +1,13 @@
 extends Node2D
 
-var itemName
-var itemQuantity
+var itemName : String
+var itemQuantity : int
 
 func _ready() -> void:
 	pass
 
 # Uses Json data to initialize the item or initializes it as null if it's empty
-func init(name, quantity):
+func init(name : String, quantity : int):
 	var stackSize
 	itemName = name
 	itemQuantity = quantity
@@ -20,8 +20,8 @@ func init(name, quantity):
 		$Count.text = String(itemQuantity)
 
 # Used for updating the current item
-func set_item(item, quantity):
-	itemName = item
+func set_item(name : String, quantity : int):
+	itemName = name
 	itemQuantity = quantity
 	update_text()
 

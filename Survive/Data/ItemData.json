@@ -4,9 +4,19 @@
     "StackSize": 1,
     "Description": "Used to chop trees."
   },
-  "Wood": {
+  "Pickaxe": {
+    "ItemCategory": "Tool",
+    "StackSize": 1,
+    "Description": "Used to break stones."
+  },
+  "WoodResource": {
     "ItemCategory": "Resource",
-    "StackSize": 25,
+    "StackSize": 250,
+    "Description": "Used for crafting and building."
+  },
+  "StoneResource": {
+    "ItemCategory": "Resource",
+    "StackSize": 100,
     "Description": "Used for crafting and building."
   }
 }
