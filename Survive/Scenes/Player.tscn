@@ -41,7 +41,6 @@ shape = SubResource( 1 )
 [node name="Camera" type="Camera2D" parent="."]
 scale = Vector2( 3.76687, 6.81747 )
 current = true
-zoom = Vector2( 5, 5 )
 
 [node name="PlayerUI" parent="." instance=ExtResource( 3 )]
 position = Vector2( 0, 175 )

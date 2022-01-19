@@ -39,7 +39,7 @@ func add_item(itemName, itemQuantity):
 				update_inventory()
 				return
 			else:
-				inventory[item][1] += ableToAdd
+				inventory[item]["ItemQuantity"] += ableToAdd
 				itemQuantity -= ableToAdd
 	
 	# Item doesn't exist in inventory yet, so add it to an empty slot

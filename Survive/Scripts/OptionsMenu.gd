@@ -16,8 +16,11 @@ func _ready():
 
 
 func _on_Back_button_up():
-	Game.change_scene("MainMenu")
-
+	if Game.scene == "OptionsMenu":
+		Game.change_scene("MainMenu")
+	else:
+		visible = false
+		get_parent().get_node("CenterContainer")
 
 func _on_Button_button_up():
 	change_fullscreen()
