@@ -1,7 +1,7 @@
 extends Control
 
 
-onready var button = $CenterContainer/TabContainer/Graphics/GridContainer/Button
+onready var button = $TabContainer/Graphics/GridContainer/Button
 var fullscreen : bool = false
 
 
