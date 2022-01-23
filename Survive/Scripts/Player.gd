@@ -6,9 +6,9 @@ var motion = Vector2()
 const SWING_TIME = .5
 const SWING_MIN = 90
 const SWING_MAX = 45
-onready var swing_timer = $Sprite/ItemArea/SwingTimer
-onready var tween = $Sprite/ItemArea/SwingAnimation
-onready var inventoryNode = $PlayerUI/Inventory
+onready var swing_timer = $ItemArea/SwingTimer
+onready var tween = $ItemArea/SwingAnimation
+onready var inventoryNode = $PlayerUI/UIContainer/InventoryContainer/Inventory
 var worldNode : Node
 var allowAction = true
 
@@ -20,9 +20,13 @@ func init():
 # Rotate player sprite to face mouse and check for input
 func _process(_delta: float) -> void:
 	worldNode.update_chunks(position)
-	$Sprite.look_at(get_global_mouse_position())
+	look_at(get_global_mouse_position())
 	if Input.is_action_pressed("ui_use_hand") && allowAction:
 		swing_hand()
+	if Input.is_action_just_pressed("ui_plus") && $Camera.zoom < Vector2(5, 5):
+		$Camera.zoom += Vector2.ONE
+	if Input.is_action_just_pressed("ui_minus") && $Camera.zoom > Vector2(1, 1):
+		$Camera.zoom -= Vector2.ONE
 
 func _physics_process(delta: float) -> void:
 	var axis = get_input_axis()
@@ -57,25 +61,25 @@ func set_hand_item():
 		var itemName = inventoryNode.inventory[inventoryNode.hotbarSelected]["ItemName"]
 		var itemCategory = Game.itemData[itemName]["ItemCategory"]
 		if itemCategory == "Tool":
-			$Sprite/ItemArea/ItemSprite.texture = Game.itemData[itemName]["Sprite"]
+			$ItemArea/ItemSprite.texture = Game.itemData[itemName]["Sprite"]
 			return
-	$Sprite/ItemArea/ItemSprite.texture = null
-	tween.remove($Sprite/ItemArea, "rotation_degrees")
-	$Sprite/ItemArea.rotation_degrees = SWING_MIN
+	$ItemArea/ItemSprite.texture = null
+	tween.remove($ItemArea, "rotation_degrees")
+	$ItemArea.rotation_degrees = SWING_MIN
 
 # Start function of swing
 func swing_hand():
 	if !swing_timer.time_left:
 		swing_timer.start(SWING_TIME)
-		tween.interpolate_property($Sprite/ItemArea, "rotation_degrees", SWING_MIN, SWING_MAX, SWING_TIME / 2, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		tween.interpolate_property($ItemArea, "rotation_degrees", SWING_MIN, SWING_MAX, SWING_TIME / 2, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		tween.start()
 
 # End function of swing
 func swing_hand_back():
-	if $Sprite/ItemArea.rotation_degrees == SWING_MAX:
-		tween.interpolate_property($Sprite/ItemArea, "rotation_degrees", SWING_MAX, SWING_MIN, SWING_TIME / 2, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	if $ItemArea.rotation_degrees == SWING_MAX:
+		tween.interpolate_property($ItemArea, "rotation_degrees", SWING_MAX, SWING_MIN, SWING_TIME / 2, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		tween.start()
-		for area in $Sprite/ItemArea.get_overlapping_areas():
+		for area in $ItemArea.get_overlapping_areas():
 			if area.has_meta("Type"):
 				var resource = area.get_meta("Type")
 				var areaNode = area.get_parent()

@@ -11,7 +11,7 @@ var gridChunks : Dictionary # Array of chunks
 var previouslyLoadedChunks : Array # Previously loaded 9 chunks
 var chunksObjects : Dictionary # Array of objects for each chunk
 var currentChunk : Vector2 # Chunk the player is in (Center of 9 chunks)
-const CHUNK_SIZE = Vector2(7, 7) # Chunk size in grid cells
+const CHUNK_SIZE = Vector2(8, 8) # Chunk size in grid cells
 const pointToChunkScale = CHUNK_SIZE * 200 / sqrt(2) # Pixels per chunk
 
 func _ready() -> void:
@@ -50,7 +50,7 @@ func prepare_chunks(originChunk : Vector2):
 				for y in range(cellPosStart.y, cellPosEnd.y):
 					if grid.has(str(x) + " " + str(y)):
 						var vec = grid[str(x) + " " + str(y)]
-						if perlinNoise.get_noise_2d(vec.x, vec.y) > 0:
+						if perlinNoise.get_noise_2d(vec.x, vec.y) > -.1 && perlinNoise.get_noise_2d(vec.x, vec.y) < .1:
 							var tree = treeScene.instance()
 							$Objects.add_child(tree)
 							tree.position = vec

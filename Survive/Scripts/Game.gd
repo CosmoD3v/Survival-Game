@@ -13,6 +13,7 @@ func _ready() -> void:
 	itemData = load_item_data("res://Data/ItemData.json")
 
 func change_scene(newScene : String):
+	get_tree().paused = false
 	var _temp = get_tree().change_scene("res://Scenes/" + newScene + ".tscn")
 	scene = newScene
 

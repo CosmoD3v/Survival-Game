@@ -1,10 +1,10 @@
-extends Node2D
+extends Control
 
 const slotClass = preload("res://Scripts/Slot.gd")
 const itemClass = preload("res://Scripts/Item.gd")
 const NUM_INVENTORY_SLOTS = 9
 onready var inventorySlots = $SlotGrid
-onready var player = get_parent().get_parent()
+onready var player = find_parent("Player")
 onready var slotOffset = ($SlotGrid/Slot1.get_combined_minimum_size() / 2) - Vector2(8, 8)
 var inventory: Dictionary
 var hotbarSelected: int
