@@ -4,7 +4,7 @@ var player: Node
 
 func _ready() -> void:
 	player = find_parent("Player")
-	$CenterContainer/MenuGrid.visible = false
+	$CenterContainer.visible = false
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
