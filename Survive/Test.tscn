@@ -1,0 +1,177 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://b.gd" type="Script" id=1]
+[ext_resource path="res://Sprite2.gd" type="Script" id=2]
+[ext_resource path="res://Test.gd" type="Script" id=3]
+[ext_resource path="res://BEEG.tres" type="Material" id=4]
+[ext_resource path="res://Sprites/WoodResource.png" type="Texture" id=5]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float intensity = 1.f;
+uniform float layers = 2.0f;
+
+void fragment(){
+	vec4 bg = texture(TEXTURE, UV);
+	COLOR.r = clamp(COLOR.r * bg.r * intensity * layers, 0.f, 1.f);
+	COLOR.r = floor(COLOR.r * layers) / layers;
+	COLOR.a = float(COLOR.r < 1.f);
+}
+
+vec4 colorize(float c, float a) {
+	vec4 pallete;
+	pallete = vec4(c, c, c, a);
+	if(pallete.g > .4f) {
+		
+	}
+	return pallete;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/intensity = 1.0
+shader_param/layers = 2.0
+
+[sub_resource type="OpenSimplexNoise" id=5]
+
+[sub_resource type="NoiseTexture" id=4]
+noise = SubResource( 5 )
+
+[sub_resource type="OpenSimplexNoise" id=16]
+
+[sub_resource type="NoiseTexture" id=17]
+noise = SubResource( 16 )
+
+[sub_resource type="OpenSimplexNoise" id=14]
+
+[sub_resource type="NoiseTexture" id=15]
+noise = SubResource( 14 )
+
+[sub_resource type="Shader" id=12]
+code = "shader_type canvas_item;
+uniform int OCTAVE = 6;
+uniform float mulscale = 5.0;
+uniform float height = 0.6;
+uniform float tide = 0.1;
+uniform float foamthickness = 0.1;
+uniform float timescale = 1.0;
+uniform float waterdeep = 0.3;
+uniform vec4 WATER_COL : hint_color =  vec4(0.04, 0.38, 0.88, 1.0);
+uniform vec4 WATER2_COL : hint_color =  vec4(0.04, 0.35, 0.78, 1.0);
+uniform vec4 FOAM_COL : hint_color = vec4(0.8125, 0.9609, 0.9648, 1.0);
+
+
+float rand(vec2 input){
+	return fract(sin(dot(input,vec2(23.53,44.0)))*42350.45);
+}
+
+float perlin(vec2 input){
+	vec2 i = floor(input);
+	vec2 j = fract(input);
+	vec2 coord = smoothstep(0.,1.,j);
+	
+	float a = rand(i);
+	float b = rand(i+vec2(1.0,0.0));
+	float c = rand(i+vec2(0.0,1.0));
+	float d = rand(i+vec2(1.0,1.0));
+
+	return mix(mix(a,b,coord.x),mix(c,d,coord.x),coord.y);
+}
+
+float fbm(vec2 input){
+	float value = 0.0;
+	float scale = 0.5;
+	
+	for(int i = 0; i < OCTAVE; i++){
+		value += perlin(input)*scale;
+		input*=2.0;
+		scale*=0.5;
+	}
+	return value;
+}
+
+void fragment(){
+	vec4 alph = texture(TEXTURE, UV);
+	float alpha = alph.a;
+	float newtime = TIME*timescale;
+	float fbmval = fbm(vec2(UV.x*mulscale+0.2*sin(0.3*newtime)+0.15*newtime,-0.05*newtime+UV.y*mulscale+0.1*cos(0.68*newtime)));
+	float fbmvalshadow = fbm(vec2(UV.x*mulscale+0.2*sin(-0.6*newtime + 25.0 * UV.y)+0.15*newtime+3.0,-0.05*newtime+UV.y*mulscale+0.13*cos(-0.68*newtime))-7.0+0.1*sin(0.43*newtime));
+	float myheight = height+tide*sin(newtime+5.0*UV.x-8.0*UV.y);
+	float shadowheight = height+tide*1.3*cos(newtime+2.0*UV.x-2.0*UV.y);
+	float withinFoam = step(myheight, fbmval)*step(fbmval, myheight + foamthickness);
+	float shadow = (1.0-withinFoam)*step(shadowheight, fbmvalshadow)*step(fbmvalshadow, shadowheight + foamthickness * 0.7);
+	COLOR = withinFoam*FOAM_COL + shadow*WATER2_COL + ((1.0-withinFoam)*(1.0-shadow))*WATER_COL;
+	COLOR *= alpha;
+	//COLOR = vec4(1.0,1.0,1.0,fbmval);
+}"
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = SubResource( 12 )
+shader_param/OCTAVE = 6
+shader_param/mulscale = 5.0
+shader_param/height = 0.6
+shader_param/tide = 0.1
+shader_param/foamthickness = 0.1
+shader_param/timescale = 1.0
+shader_param/waterdeep = 0.3
+shader_param/WATER_COL = Color( 0.04, 0.38, 0.88, 1 )
+shader_param/WATER2_COL = Color( 0.04, 0.35, 0.78, 1 )
+shader_param/FOAM_COL = Color( 0.8125, 0.9609, 0.9648, 1 )
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+visible = false
+material = SubResource( 2 )
+texture = SubResource( 4 )
+centered = false
+script = ExtResource( 1 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+visible = false
+material = ExtResource( 4 )
+position = Vector2( 209, 220 )
+texture = SubResource( 17 )
+script = ExtResource( 2 )
+
+[node name="Sprite3" type="Sprite" parent="."]
+visible = false
+position = Vector2( 32, 32 )
+scale = Vector2( 0.125, 0.125 )
+texture = SubResource( 15 )
+script = ExtResource( 2 )
+
+[node name="ViewportContainer2" type="ViewportContainer" parent="."]
+visible = false
+material = SubResource( 13 )
+margin_left = 109.0
+margin_top = 1.0
+margin_right = 309.0
+margin_bottom = 201.0
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer2"]
+size = Vector2( 200, 200 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 0
+
+[node name="Sprite" type="Sprite" parent="ViewportContainer2/Viewport"]
+position = Vector2( -8, -4 )
+texture = ExtResource( 5 )
+centered = false
+offset = Vector2( 10, 10 )
+
+[node name="Sprite3" type="Sprite" parent="ViewportContainer2/Viewport"]
+position = Vector2( -8, -4 )
+texture = ExtResource( 5 )
+centered = false
+offset = Vector2( 50, 10 )
+flip_h = true
+
+[node name="Sprite2" type="Sprite" parent="ViewportContainer2/Viewport"]
+position = Vector2( 20, 50 )
+texture = ExtResource( 5 )
+centered = false
+offset = Vector2( 50, 0 )

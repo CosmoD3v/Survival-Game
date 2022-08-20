@@ -235,8 +235,8 @@ func is_shape_closed() -> bool:
 
 
 func add_points(verts: Array, starting_index: int = -1, key: int = -1) -> Array:
-	for i in range(0, verts.size(), 1):
-		print("%s | %s" % [i, verts[i]])
+#	for i in range(0, verts.size(), 1):
+#		print("%s | %s" % [i, verts[i]])
 	return .add_points(verts, adjust_add_point_index(starting_index), key)
 
 

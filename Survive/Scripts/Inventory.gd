@@ -13,7 +13,6 @@ var mouseItem = null
 # Initialize hotbar and inventory
 func init() -> void:
 	inventory = Game.load_user_data()
-	hotbarSelected = 0
 	update_hotbar()
 	var slots = inventorySlots.get_children()
 	for i in range(slots.size()):
@@ -104,7 +103,7 @@ func swap_stack_items(event, slot):
 		slot.put_into_slot(mouseItem)
 		# Update mouseItem
 		mouseItem = tempItem
-		mouseItem.global_position = get_global_mouse_position() - slotOffset
+		update_mouse_item_position()
 
 func put_item_in(slot):
 	add_item_to_empty_slot(mouseItem, slot)
@@ -115,34 +114,62 @@ func pull_item_out(slot):
 	remove_item(slot)
 	mouseItem = slot.item
 	slot.pick_from_slot()
-	mouseItem.global_position = get_global_mouse_position() - slotOffset
+	update_mouse_item_position()
 
 # Used for updating which slot the user has selected
-func update_hotbar(direction = null):
+func update_hotbar(action = "0"):
 	var slots = inventorySlots.get_children()
 	slots[hotbarSelected].self_modulate = Color(1,1,1)
-	match direction:
-		"forward":
+	match action:
+		"+":
 			if hotbarSelected < NUM_INVENTORY_SLOTS - 1:
 				hotbarSelected += 1
 			else:
 				hotbarSelected = 0
-		"backward":
+		"-":
 			if hotbarSelected > 0:
 				hotbarSelected -= 1
 			else:
 				hotbarSelected = NUM_INVENTORY_SLOTS - 1
-	slots[hotbarSelected].self_modulate = Color(.9,.75,.27)
+		_:
+			hotbarSelected = int(action)
+#	slots[hotbarSelected].self_modulate = Color(.9,.75,.27)
+	slots[hotbarSelected].self_modulate = Color8(65, 65, 65)
 	player.set_hand_item()
+
+func update_mouse_item_position():
+	mouseItem.global_position = get_global_mouse_position() - slotOffset
 
 # Updates visual for hotbar and items held within the mouse
 func _input(event):
 	if mouseItem:
-		mouseItem.global_position = get_global_mouse_position() - slotOffset
-	if event.is_action_pressed("ui_scroll_up"):
-		update_hotbar("forward")
-	if event.is_action_pressed("ui_scroll_down"):
-		update_hotbar("backward")
+		update_mouse_item_position()
+	if event is InputEventMouse:
+		if event.is_action_pressed("ui_scroll_up"):
+			update_hotbar("-")
+		if event.is_action_pressed("ui_scroll_down"):
+			update_hotbar("+")
+	elif event is InputEventKey && event.is_pressed():
+		match(event.scancode):
+			KEY_1:
+				update_hotbar(0)
+			KEY_2:
+				update_hotbar(1)
+			KEY_3:
+				update_hotbar(2)
+			KEY_4:
+				update_hotbar(3)
+			KEY_5:
+				update_hotbar(4)
+			KEY_6:
+				update_hotbar(5)
+			KEY_7:
+				update_hotbar(6)
+			KEY_8:
+				update_hotbar(7)
+			KEY_9:
+				update_hotbar(8)
+
 
 func _on_SlotGrid_mouse_entered() -> void:
 	player.allowAction = false

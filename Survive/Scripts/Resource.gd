@@ -14,13 +14,13 @@ func _ready() -> void:
 func addMeta():
 	pass
 
-func harvest(_inventory):
+func harvest(_harvestTool : String):
 	pass
 
 # Called by player when this object is harvested
-func collect_resource(playerNode : Node, inventoryNode : Node):
+func collect_resource(playerNode : Node, harvestTool : String):
 	knockback(playerNode)
-	harvest(inventoryNode)
+	return harvest(harvestTool)
 
 # Start animation for when the player hits the object
 func knockback(player):

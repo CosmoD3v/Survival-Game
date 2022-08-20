@@ -7,4 +7,10 @@ script = ExtResource( 2 )
 
 [node name="Players" type="Node2D" parent="."]
 
+[node name="Water" type="Node2D" parent="."]
+
 [node name="Objects" type="Node2D" parent="."]
+
+[node name="Chunks" type="Node2D" parent="."]
+
+[node name="Tiles" type="Node2D" parent="."]

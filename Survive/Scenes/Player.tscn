@@ -13,6 +13,8 @@ radius = 31.9997
 radius = 25.7099
 
 [node name="Player" type="KinematicBody2D"]
+collision_layer = 0
+collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -39,7 +41,6 @@ texture = ExtResource( 5 )
 [node name="Area" type="CollisionShape2D" parent="ItemArea"]
 position = Vector2( 108, -23 )
 rotation = 0.785398
-scale = Vector2( 1, 1 )
 shape = SubResource( 2 )
 
 [node name="SwingTimer" type="Timer" parent="ItemArea"]

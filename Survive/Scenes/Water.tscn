@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Sprites/Water.png" type="Texture" id=1]
+
+[node name="Sprite" type="Sprite"]
+modulate = Color( 0.960784, 0.886275, 0.0862745, 0.380392 )
+scale = Vector2( 0.35, 0.35 )
+z_index = -1
+texture = ExtResource( 1 )
+centered = false

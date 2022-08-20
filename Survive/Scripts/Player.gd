@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
-var MAX_SPEED = 500
-var ACCELERATION = 5000
+var MAX_SPEED = 5000
+var ACCELERATION = 50000
 var motion = Vector2()
 const SWING_TIME = .5
 const SWING_MIN = 90
@@ -9,24 +9,27 @@ const SWING_MAX = 45
 onready var swing_timer = $ItemArea/SwingTimer
 onready var tween = $ItemArea/SwingAnimation
 onready var inventoryNode = $PlayerUI/UIContainer/InventoryContainer/Inventory
+#onready var bg : Sprite = get_node("bg")
 var worldNode : Node
 var allowAction = true
 
 func init():
 	worldNode = get_parent().get_parent()
-	worldNode.prepare_chunks(position)
+	#worldNode.prepare_chunks(position)
 	inventoryNode.init()
 
 # Rotate player sprite to face mouse and check for input
 func _process(_delta: float) -> void:
+#	bg.material.set_shader_param("offset", position/400)
 	worldNode.update_chunks(position)
+	
 	look_at(get_global_mouse_position())
 	if Input.is_action_pressed("ui_use_hand") && allowAction:
 		swing_hand()
-	if Input.is_action_just_pressed("ui_plus") && $Camera.zoom < Vector2(5, 5):
-		$Camera.zoom += Vector2.ONE
-	if Input.is_action_just_pressed("ui_minus") && $Camera.zoom > Vector2(1, 1):
+	if Input.is_action_just_pressed("ui_plus") && $Camera.zoom > Vector2(1, 1):
 		$Camera.zoom -= Vector2.ONE
+	if Input.is_action_just_pressed("ui_minus") && $Camera.zoom < Vector2(10, 10):
+		$Camera.zoom += Vector2.ONE
 
 func _physics_process(delta: float) -> void:
 	var axis = get_input_axis()
@@ -53,7 +56,8 @@ func apply_friction(amount):
 # Used by physics_process
 func apply_movement(acceleration):
 	motion += acceleration
-	motion = motion.clamped(MAX_SPEED)
+	#motion = motion.clamped(MAX_SPEED)
+	motion = motion.limit_length(MAX_SPEED)
 
 # Updates the sprite based on hotbar
 func set_hand_item():
@@ -85,7 +89,10 @@ func swing_hand_back():
 				var areaNode = area.get_parent()
 				match resource:
 					"Resource":
-						areaNode.collect_resource(self, inventoryNode)
+						var harvestTool : String = "Hand" if !inventoryNode.inventory.has(inventoryNode.hotbarSelected) else inventoryNode.inventory[inventoryNode.hotbarSelected]["ItemName"]
+						var request : Dictionary = areaNode.collect_resource(self, harvestTool)
+						if !request.empty():
+							inventoryNode.add_item(request["Item"], request["Quantity"])
 					_:
 						print("not a resource")
 
