@@ -74,6 +74,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
 [connection signal="button_up" from="CenterContainer/MenuGrid/Play" to="CenterContainer/MenuGrid" method="_on_Play_button_up"]
 [connection signal="button_up" from="CenterContainer/MenuGrid/Options" to="CenterContainer/MenuGrid" method="_on_Options_button_up"]
 [connection signal="button_up" from="CenterContainer/MenuGrid/Quit" to="CenterContainer/MenuGrid" method="_on_Quit_button_up"]
