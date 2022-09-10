@@ -9,6 +9,21 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "HBoxContainer",
+"class": "ContributorClass",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/ContributorClass.gd"
+}, {
+"base": "PanelContainer",
+"class": "GistItem",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/GistItem.gd"
+}, {
+"base": "HBoxContainer",
+"class": "InvitationItem",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/InvitationItem.gd"
+}, {
 "base": "Resource",
 "class": "RMS2D_Material",
 "language": "GDScript",
@@ -33,6 +48,11 @@ _global_script_classes=[ {
 "class": "RMSmartShapeAnchor2D",
 "language": "GDScript",
 "path": "res://addons/rmsmartshape/RMSmartShapeAnchor2D.gd"
+}, {
+"base": "PanelContainer",
+"class": "RepositoryItem",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/RepositoryItem.gd"
 }, {
 "base": "Node",
 "class": "SS2D_Common_Functions",
@@ -140,11 +160,15 @@ _global_script_classes=[ {
 "path": "res://addons/rmsmartshape/vertex_properties.gd"
 } ]
 _global_script_class_icons={
+"ContributorClass": "",
+"GistItem": "",
+"InvitationItem": "",
 "RMS2D_Material": "",
 "RMS2D_VertexProperties": "",
 "RMS2D_VertexPropertiesArray": "",
 "RMSmartShape2D": "res://addons/rmsmartshape/assets/LEGACY_shape.png",
 "RMSmartShapeAnchor2D": "res://addons/rmsmartshape/assets/LEGACY_shape_anchor.png",
+"RepositoryItem": "",
 "SS2D_Common_Functions": "",
 "SS2D_Edge": "",
 "SS2D_Material_Edge": "",
@@ -178,6 +202,10 @@ config/icon="res://Sprites/Player.png"
 [autoload]
 
 Game="*res://Scripts/Game.gd"
+PluginSettings="*res://addons/github-integration/scripts/PluginSettings.gd"
+IconLoaderGithub="*res://addons/github-integration/scripts/IconLoaderGithub.gd"
+UserData="*res://addons/github-integration/scripts/user_data.gd"
+RestHandler="*res://addons/github-integration/scenes/RestHandler.tscn"
 
 [debug]
 
@@ -185,7 +213,7 @@ settings/fps/force_fps=144
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/gut/plugin.cfg", "res://addons/rmsmartshape/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/github-integration/plugin.cfg", "res://addons/gut/plugin.cfg", "res://addons/rmsmartshape/plugin.cfg" )
 
 [global]
 
