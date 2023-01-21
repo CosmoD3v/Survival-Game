@@ -2,21 +2,43 @@
   "Axe": {
     "ItemCategory": "Tool",
     "StackSize": 1,
-    "Description": "Used to chop trees."
+    "Description": "Used to chop trees.",
+	"Recipe": {
+		"RequirementToLearn": "StoneResource",
+		"Craft": {
+			"WoodResource": 12,
+			"StoneResource": 5
+		},
+		"CraftTime": 4,
+		"Quantity": 1
+	},
+	"Material": false
   },
   "Pickaxe": {
     "ItemCategory": "Tool",
     "StackSize": 1,
-    "Description": "Used to break stones."
+    "Description": "Used to break stones.",
+	"Recipe": {
+		"RequirementToLearn": "StoneResource",
+		"Craft": {
+			"WoodResource": 10,
+			"StoneResource": 2
+		},
+		"CraftTime": 4,
+		"Quantity": 1
+	},
+	"Material": false
   },
   "WoodResource": {
     "ItemCategory": "Resource",
-    "StackSize": 250,
-    "Description": "Used for crafting and building."
+    "StackSize": 99,
+    "Description": "Used for crafting and building.",
+	"Material": true
   },
   "StoneResource": {
     "ItemCategory": "Resource",
-    "StackSize": 100,
-    "Description": "Used for crafting and building."
+    "StackSize": 99,
+    "Description": "Used for crafting and building.",
+	"Material": true
   }
 }

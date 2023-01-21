@@ -1,12 +1,15 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Sprites/HealthBorder.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Inventory.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/WaterBorder.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/FoodBorder.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/GameMenu.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/CraftMenu.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scripts/PlayerUI.gd" type="Script" id=7]
 
 [node name="PlayerUI" type="CanvasLayer"]
+script = ExtResource( 7 )
 
 [node name="UIContainer" type="VBoxContainer" parent="."]
 anchor_left = 0.5
@@ -17,9 +20,6 @@ margin_left = -512.0
 margin_top = -160.0
 margin_right = 512.0
 custom_constants/separation = 30
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BarContainer" type="HBoxContainer" parent="UIContainer"]
 margin_right = 1024.0
@@ -113,3 +113,7 @@ anchor_top = 0.5
 anchor_bottom = 0.5
 margin_top = -300.0
 margin_bottom = 300.0
+
+[node name="CraftMenu" parent="." instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0

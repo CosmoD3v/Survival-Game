@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/seam.png-124bea48ed60e38e7196a4899e10d55a.stex"
+path="res://.import/class-icon.svg-c17de51589a7d30572bf401526524f64.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/seam.png"
-dest_files=[ "res://.import/seam.png-124bea48ed60e38e7196a4899e10d55a.stex" ]
+source_file="res://addons/SmoothScroll/class-icon.svg"
+dest_files=[ "res://.import/class-icon.svg-c17de51589a7d30572bf401526524f64.stex" ]
 
 [params]
 
@@ -19,7 +19,7 @@ compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=1
+flags/repeat=0
 flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false

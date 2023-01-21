@@ -1,120 +1,225 @@
 extends Control
 
-const slotClass = preload("res://Scripts/Slot.gd")
-const itemClass = preload("res://Scripts/Item.gd")
+const SlotClass = preload("res://Scripts/Slot.gd")
+const ItemClass = preload("res://Scripts/Item.gd")
 const NUM_INVENTORY_SLOTS = 9
+
 onready var inventorySlots = $SlotGrid
 onready var player = find_parent("Player")
 onready var slotOffset = ($SlotGrid/Slot1.get_combined_minimum_size() / 2) - Vector2(8, 8)
-var inventory: Dictionary
-var hotbarSelected: int
+
+var inventory : Dictionary
+var itemQuery : Dictionary
+var hotbarSelected : int
 var mouseItem = null
+
+signal item_quantity_changed
+signal is_craftable
 
 # Initialize hotbar and inventory
 func init() -> void:
-	inventory = Game.load_user_data()
-	update_hotbar()
+	
 	var slots = inventorySlots.get_children()
 	for i in range(slots.size()):
 		slots[i].connect("gui_input", self, "slot_gui_input", [slots[i]])
 		slots[i].slotIndex = i
-		slots[i].init()
+	
+	var saveData : Dictionary = Game.load_user_data()
+	for index in saveData:
+		inventory_changed(index, saveData[index]["ItemQuantity"], saveData[index]["ItemName"])
+	
+	update_hotbar()
+	player.set_hand_item()
 
-# Called by slot_gui_input to refresh the visual elements of each slot of the inventory
-func update_inventory():
-	var slots = inventorySlots.get_children()
-	for i in range(slots.size()):
-		if inventory.has(i):
-			slots[i].update_item(inventory[i]["ItemName"], inventory[i]["ItemQuantity"])
+#func get_items_and_quantities() -> Dictionary:
+#	var itemsAndQuantities : Dictionary = {}
+#	for i in inventory:
+#		var itemName = inventory[i]["ItemName"]
+#		if (itemsAndQuantities.has(itemName)):
+#			continue
+#		itemsAndQuantities[itemName] = get_quantity_of_item(itemName)
+#	return itemsAndQuantities
+#
+#func get_quantity_of_item(itemName : String) -> int:
+#	var quantity = 0
+#	for i in inventory:
+#			if inventory[i]["ItemName"] == itemName:
+#				quantity += inventory[i]["ItemQuantity"]
+#	return quantity
+
+func is_craftable(item : Dictionary):
+	var itemName : String = item["ItemName"]
+	var itemRecipy : Dictionary = item["Recipy"]
+	for material in itemRecipy:
+		if (!itemQuery.has(material) || itemQuery[material]["Total"] < itemRecipy[material]):
+#			print(itemName + " is not craftable")
+			emit_signal("is_craftable", itemName, false)
+			return
+	emit_signal("is_craftable", itemName, true)
+#	print(itemName + " is craftable")
+
+# Needs implemented
+func remove_items(_itemsAndQuantities : Dictionary):
+	pass
 
 # Call when an item needs to be collected by the player
+# Needs refactored for itemQuantities greater than StackSize of that item
 func add_item(itemName, itemQuantity):
-	for item in inventory:
-		if inventory[item]["ItemName"] == itemName:
-			var stackSize = int(Game.itemData[itemName]["StackSize"])
-			var ableToAdd = stackSize - inventory[item]["ItemQuantity"]
-			if ableToAdd >= itemQuantity:
-				inventory[item]["ItemQuantity"] += itemQuantity
-				update_inventory()
-				return
-			else:
-				inventory[item]["ItemQuantity"] += ableToAdd
-				itemQuantity -= ableToAdd
-	
+	if (Game.itemData[itemName]["StackSize"] > 1):
+		for item in inventory:
+			if inventory[item]["ItemName"] == itemName:
+				var stackSize = int(Game.itemData[itemName]["StackSize"])
+				var ableToAdd = stackSize - inventory[item]["ItemQuantity"]
+				if (ableToAdd == 0):
+					continue
+				if itemQuantity <= ableToAdd:
+					inventory_changed(item, itemQuantity)
+#					print(inventory)
+					return
+				else:
+					inventory_changed(item, ableToAdd)
+					itemQuantity -= ableToAdd
 	# Item doesn't exist in inventory yet, so add it to an empty slot
-	for i in range(NUM_INVENTORY_SLOTS):
-		if inventory.has(i) == false:
-			inventory[i] = {
-				"ItemName" : itemName,
-				"ItemQuantity" : itemQuantity
-			}
-			update_inventory()
-			return
+	for index in range(NUM_INVENTORY_SLOTS):
+		if inventory.has(index) == false:
+			inventory_changed(index, itemQuantity, itemName)
+			itemQuantity = 0
+			break
+	# Implement items dropping on ground when inventory can't fit this item
+	if (itemQuantity > 0):
+		pass
 
-# Controls data within the Game Singleton
-func add_item_to_empty_slot(item: itemClass, slot: slotClass):
-	inventory[slot.slotIndex] = {
-		"ItemName" : item.itemName,
-		"ItemQuantity" : item.itemQuantity
-	}
+# This function must be used to properly update inventory, itemQuery, GUI, and emit a signal for these changes
+# There are 3 total cases:
+#
+# 1 - If only an index is provided, the inventory item at that index is removed
+# 2 - If index and itemQuanitty are provided, the inventory item at that index has it's quantity changed
+# 3 - If all 3 args are provided, a new item is created in the inventory at that index
+# 
+func inventory_changed(index : int, itemQuantity : int = 0, itemName : String = ""):
+	# Case 1
+	if (itemQuantity == 0):
+		
+		itemName = inventory[index]["ItemName"]
+		# warning-ignore:return_value_discarded
+		inventory.erase(index)
+		
+		# Erase this index from this item and then if the item dict is empty, erase it from the itemQuery
+		itemQuery[itemName].erase(index)
+		calc_new_item_total_in_query(itemName)
+		if (itemQuery[itemName]["Total"] == 0):
+			# warning-ignore:return_value_discarded
+			itemQuery.erase(itemName)
+		
+	# Case 2
+	elif (itemName.empty()):
+#		print("CASE 2")
+		if (inventory.has(index)):
+			itemName = inventory[index]["ItemName"]
+		else:
+			itemName = mouseItem.slot.itemName
+		inventory[index]["ItemQuantity"] += itemQuantity
+		
+		#
+		itemQuery[itemName][index] += itemQuantity
+		calc_new_item_total_in_query(itemName)
+		
+	# Case 3
+	else: # If an itemName is specified, we are creating a new item at this index
+#		print("CASE 3")
+		if (inventory.has(index) && !inventory[index].empty()):
+			var oldItemName = inventory[index]["ItemName"]
+			itemQuery[oldItemName].erase(index)
+			calc_new_item_total_in_query(oldItemName)
+			if (itemQuery[oldItemName]["Total"] == 0):
+				# warning-ignore:return_value_discarded
+				itemQuery.erase(oldItemName)
+			var oldItemTotal : int = 0 if !itemQuery.has(oldItemName) else itemQuery[oldItemName]["Total"]
+			emit_signal("item_quantity_changed", oldItemName)
+		inventory[index] = {
+			"ItemName" : itemName,
+			"ItemQuantity" : itemQuantity
+		}
+		if (!itemQuery.has(itemName)):
+			itemQuery[itemName] = {}
+		itemQuery[itemName][index] = itemQuantity
+		calc_new_item_total_in_query(itemName)
+		
+	update_slot_gui(index)
+#	print(itemQuery)
+	var itemTotal : int = 0 if !itemQuery.has(itemName) else itemQuery[itemName]["Total"]
+	emit_signal("item_quantity_changed", itemName)
 
-func remove_item(slot: slotClass):
-# warning-ignore:return_value_discarded
-	inventory.erase(slot.slotIndex)
+func update_slot_gui(index : int):
+	var slot : SlotClass = inventorySlots.get_child(index)
+	if (inventory.has(index)):
+		slot.set_item(inventory[index]["ItemName"], inventory[index]["ItemQuantity"])
+	else:
+		slot.remove_item()
 
-func add_item_quantity(slot: slotClass, quantityToAdd: int):
-	inventory[slot.slotIndex]["ItemQuantity"] += quantityToAdd
+func calc_new_item_total_in_query(itemName : String):
+	var total : int = 0
+	if (itemQuery.has(itemName)):
+		for i in itemQuery[itemName]:
+			var keyAtIndex = i
+			var countAtIndex = itemQuery[itemName][i]
+			if (typeof(keyAtIndex) == TYPE_INT):
+				total += countAtIndex
+	itemQuery[itemName]["Total"] = total
+
+
+
+
 
 # Called when user clicks on the inventory
-func slot_gui_input(event: InputEvent, slot: slotClass):
+func slot_gui_input(event: InputEvent, slot: SlotClass):
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT && event.pressed:
+		if event.button_index == BUTTON_LEFT && event.is_pressed():
 			if mouseItem:
 				if slot.item:
-					swap_stack_items(event, slot)
+					swap_stack_items(slot)
 				else:
-					put_item_in(slot)
+					mouse_to_slot(slot)
 			else:
 				if slot.item:
-					pull_item_out(slot)
+					slot_to_mouse(slot)
 			player.set_hand_item()
 
-# warning-ignore:unused_argument
-func swap_stack_items(event, slot):
+func swap_stack_items(slot : SlotClass):
 	if mouseItem.itemName == slot.item.itemName:
 		var stackSize = int(Game.itemData[slot.item.itemName]["StackSize"])
 		var ableToAdd = stackSize - slot.item.itemQuantity
-		if ableToAdd >= mouseItem.itemQuantity:
-			add_item_quantity(slot, mouseItem.itemQuantity)
-			slot.item.add_item_quantity(mouseItem.itemQuantity)
-			mouseItem.queue_free()
-			mouseItem = null
-		else:
-			add_item_quantity(slot, ableToAdd)
-			slot.item.add_item_quantity(ableToAdd)
-			mouseItem.decrease_item_quantity(ableToAdd)
+		if ableToAdd > 0:
+			if mouseItem.itemQuantity <= ableToAdd:
+				inventory_changed(slot.slotIndex, mouseItem.itemQuantity)
+				mouseItem.queue_free()
+				mouseItem = null
+			else:
+				inventory_changed(slot.slotIndex, ableToAdd)
+				mouseItem.decrease_item_quantity(ableToAdd)
 	else:
-		# Data moving
-		remove_item(slot)
-		add_item_to_empty_slot(mouseItem, slot)
-		# Visual update
-		var tempItem = slot.item
-		slot.pick_from_slot()
-		slot.put_into_slot(mouseItem)
-		# Update mouseItem
-		mouseItem = tempItem
+		var itemQuantity = mouseItem.itemQuantity
+		var itemName = mouseItem.itemName
+		mouseItem.queue_free()
+		var item = slot.ItemClass.instance()
+		item.set_item(slot.item.itemName, slot.item.itemQuantity)
+		mouseItem = item
+		add_child(item)
+		inventory_changed(slot.slotIndex, itemQuantity, itemName)
 		update_mouse_item_position()
 
-func put_item_in(slot):
-	add_item_to_empty_slot(mouseItem, slot)
-	slot.put_into_slot(mouseItem)
-	mouseItem = null
-
-func pull_item_out(slot):
-	remove_item(slot)
-	mouseItem = slot.item
-	slot.pick_from_slot()
+func slot_to_mouse(slot : SlotClass):
+	var item = slot.ItemClass.instance()
+	item.set_item(slot.item.itemName, slot.item.itemQuantity)
+	mouseItem = item
+	add_child(item)
+	inventory_changed(slot.slotIndex)
 	update_mouse_item_position()
+
+func mouse_to_slot(slot : SlotClass):
+	inventory_changed(slot.slotIndex, mouseItem.itemQuantity, mouseItem.itemName)
+	mouseItem.queue_free()
+	mouseItem = null
 
 # Used for updating which slot the user has selected
 func update_hotbar(action = "0"):
@@ -169,7 +274,6 @@ func _input(event):
 				update_hotbar(7)
 			KEY_9:
 				update_hotbar(8)
-
 
 func _on_SlotGrid_mouse_entered() -> void:
 	player.allowAction = false

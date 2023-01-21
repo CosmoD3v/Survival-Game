@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/CraftMenu.gd" type="Script" id=2]
+[ext_resource path="res://addons/SmoothScroll/SmoothScrollContainer.gd" type="Script" id=3]
+
+[node name="CraftMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HBContainer" type="HBoxContainer" parent="."]
+margin_right = 256.0
+margin_bottom = 256.0
+
+[node name="SSContainer" type="ScrollContainer" parent="HBContainer"]
+margin_bottom = 256.0
+scroll_horizontal_enabled = false
+script = ExtResource( 3 )
+
+[node name="RecipyList" type="GridContainer" parent="HBContainer/SSContainer"]
+custom_constants/vseparation = 0
+custom_constants/hseparation = 0
+columns = 3
+
+[node name="CraftingProgessList" type="GridContainer" parent="HBContainer"]
+margin_left = 4.0
+margin_right = 4.0
+margin_bottom = 256.0

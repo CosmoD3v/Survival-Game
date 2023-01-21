@@ -183,9 +183,13 @@ Game="*res://Scripts/Game.gd"
 
 settings/fps/force_fps=144
 
+[display]
+
+window/size/fullscreen=true
+
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/gut/plugin.cfg", "res://addons/rmsmartshape/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/SmoothScroll/plugin.cfg", "res://addons/gut/plugin.cfg", "res://addons/rmsmartshape/plugin.cfg" )
 
 [global]
 

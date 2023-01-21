@@ -2,10 +2,17 @@ extends Node2D
 
 var mid : PoolVector2Array
 # Called when the node enters the scene tree for the first time.
+
+func inventory_changed(index : int, quantity : int, itemName : String = ""):
+	if (itemName.empty()):
+		print("isempty")
+	pass
+
 func _ready() -> void:
-	
-	var thread : Thread = Thread.new()
-	thread.start(self, "make_sprite", thread, Thread.PRIORITY_NORMAL)
+	inventory_changed(0, 0)
+	pass
+#	var thread : Thread = Thread.new()
+#	thread.start(self, "make_sprite", thread, Thread.PRIORITY_NORMAL)
 	
 #	var poly = Polygon2D.new()
 #	var pool : Array

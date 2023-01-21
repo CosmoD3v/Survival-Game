@@ -4,6 +4,7 @@ const PLAYER_DIR = "user://Players/"
 const WORLD_DIR = "user://Worlds/"
 
 var currentPlayer : String
+var knownMaterials : Array
 var itemData : Dictionary
 var scene : String
 
@@ -75,9 +76,14 @@ func create_new_character(id : String):
 				1 : {
 					"ItemName" : "Pickaxe",
 					"ItemQuantity" : 1
+				},
+				2 : {
+					"ItemName" : "StoneResource",
+					"ItemQuantity" : 4
 				}
 			}
 		}
+		data["KnownMaterials"] = []
 		file.store_var(data)
 		file.close()
 
@@ -105,7 +111,8 @@ func save_user_data(inventory: Dictionary):
 	var file = File.new()
 	if file.open(PLAYER_DIR + id + ".json", File.WRITE) == OK:
 		var data = {
-			"Inventory" : inventory.duplicate()
+			"Inventory" : inventory.duplicate(),
+			"KnownMaterials" : knownMaterials
 		}
 		file.store_var(data)
 		file.close()
@@ -129,6 +136,9 @@ func load_user_data():
 	if file.file_exists(userData):
 		if file.open(userData, File.READ) == OK:
 			var playerData = file.get_var()
+			
+			knownMaterials = playerData.get("KnownMaterials")
+			
 			var inventory = playerData.get("Inventory")
 			file.close()
 			return inventory

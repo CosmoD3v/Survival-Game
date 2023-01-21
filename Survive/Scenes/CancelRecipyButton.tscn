@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/CancelRecipyButton.gd" type="Script" id=1]
+
+[sub_resource type="Shader" id=1]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform float percentage: hint_range(0.0, 1.0) = 0.0;
+
+void fragment() {
+	vec4 main_tx = texture(TEXTURE, UV);
+    float avg = (main_tx.r + main_tx.g + main_tx.b) / 3.0;
+	COLOR.a = main_tx.a;
+	COLOR.rgb = main_tx.rgb * step(UV.y, percentage) + (vec3(avg) * step(percentage, UV.y));
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = SubResource( 1 )
+shader_param/percentage = 0.0
+
+[node name="CancelRecipyButton" type="TextureButton"]
+material = SubResource( 2 )
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
