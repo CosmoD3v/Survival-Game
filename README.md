@@ -93,9 +93,11 @@ Going down this rabbit-hole was an experience that taught me so many clever algo
 
 ### Poisson-Disc Sampling
     
-    When distributing objects in a scene randomly, it is usually ideal to spread them in a way that avoids clumping. One such approach is referred to as poisson-disc sampling, which utilizes a gridmap architecture to validate that object placements aren't too close to already existing objects. 
+> When distributing objects in a scene randomly, it is usually ideal to spread them in a way that avoids clumping.
+> One such approach is referred to as poisson-disc sampling, which utilizes a gridmap architecture to validate that object placements aren't too close to already existing objects. 
 
-    By building this algorithm on top of a gridmap, you are able to reduce time complexity from O((n^2) / 2) to O(1); A huge perfomance savings. This is because instead of having to compare the distances between all existing points for a new point, you only have to compare points located in grids in close proximity to the new point.
+> By building this algorithm on top of a gridmap, you are able to reduce time complexity from O((n^2) / 2) to O(1); A huge perfomance savings.
+> This is because instead of having to compare the distances between all existing points for a new point, you only have to compare points located in grids in close proximity to the new point.
 
 |Performant Chunk Loading/Unloading|
 |----|
@@ -103,12 +105,14 @@ Going down this rabbit-hole was an experience that taught me so many clever algo
 
 ### OpenSimplex Noise
 
-    Once you have generated random, but fairly even placements of points, you can then utilize a noise map in order to determine what to place and where.
+> Once you have generated random, but fairly even placements of points, you can then utilize a noise map in order to determine what to place and where.
     
-    Side note:
-    OpenSimplex noise is an open-source algorithm based on Ken Perlin's Perlin noise, which he originally invented back in 1983 whilest working on Disney's Tron film. He created these algorithms in order to help him design computer scenery that was random but smooth so that it seemed natural to the eye.
+> Side note:
+> OpenSimplex noise is an open-source algorithm based on Ken Perlin's Perlin noise, which he originally invented back in 1983 whilest working on Disney's Tron film.
+> He created these algorithms in order to help him design computer scenery that was random but smooth so that it seemed natural to the eye.
 
-    By filtering your chosen point distribution through the output range of the noise algorithm, you can create a natural-looking landscape that is populated with scenery objects. Taking this step further, you can employ multiple different noise maps, referring to different properties such as height, temperature, and moisture, in order to add additional realism and complexity to your world.
+> By filtering your chosen point distribution through the output range of the noise algorithm, you can create a natural-looking landscape that is populated with scenery objects.
+> Taking this step further, you can employ multiple different noise maps, referring to different properties such as height, temperature, and moisture, in order to add additional realism and complexity to your world.
 
 These are noise techniques I learned about while reading the blog of Amit Patel, a figure that I look up to for helping develop one of my favorite games. You can read more on his blog here:
 https://www.redblobgames.com
