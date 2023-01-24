@@ -86,7 +86,7 @@ Creating, deleting, and selecting saves are all done through the use of cards as
 
 |Dense Forest|
 |----|
-|![DenseForestExploration](https://cdn.discordapp.com/attachments/1044495816489967626/1067293476275900456/dense-forest-exploration.gif)|
+|![DenseForestExploration](https://media.discordapp.net/attachments/1044495816489967626/1067305521956265994/dense-forest-exploration.gif)|
 
 If done in a way that enhances gameplay and replayability, another great feature of the survival game genre is providing the player with procedurally generated worlds to explore.
 Going down this rabbit-hole was an experience that taught me so many clever algorithms and approaches to creating procedural content.
