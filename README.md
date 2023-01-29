@@ -11,7 +11,7 @@ Though I have worked on other small games since I was a teenager, this game is t
 I have been developing this game on and off in my spare time from school since the beginning of 2022, practicing my coding skills in the process of figuring out how to implement ideas and systems that I think would be awesome.
 Although to most, this project is not something that would wow them, I have spent countless hours refining my skills as a programmer in the process of making this my dream game. By solving difficult technical and design problems on my own, I have accumulated new problem-solving skills and techniques for writing code that I did not learn in any class from college.
 
-**So, from the perspective of experienced and skills gained, this is my most successful project yet.**
+**So, from the perspective of experience and skills gained, this is my most successful project yet.**
 
 Although I am just in the beginning steps of creating a playable game, which requires much more work to go before it's where I would like it to be, it has served my self-learning greatly. For this reason, I decided it would be a great choice to show it off proudly.
 
@@ -41,16 +41,16 @@ One feature that's pretty standard to see in survival games is a crafting menu, 
 
 How to go about it?
 
-I settled on the idea of every item in the game, that is craftable, having a material that unlocks its recipy.
+I settled on a system for recipe unlocking such that every craftable item in the game has a material that unlocks its recipe.
 Once unlocked, an icon for that item shows up on a portion of the screen that is designated for the menu and can be crafted if all components are obtained.
 In this process of crafting, the Inventory and Crafting menu objects emit events to each other to communicate what actions should be taken at different steps of the process.
 
 These events include but arent limited to:
 
-- Recipy unlocking
+- Recipe unlocking
 - Item craftability state changes
 - Crafting queue and unqueue
-- Crafting completion (Item creation and consuming recipy components)
+- Crafting completion (Item creation and consuming recipe components)
 
 ---
 
@@ -66,7 +66,7 @@ This is definitely the case for my game so I looked into a couple possible optio
 - Resource Persistence
 - JSON
 
-While resource persistence was a cool, Godot officially supported option for saving well- ...Resources, I already had some small experience with the JSON file format in the past. On top of that, going with JSON would be a more universally applicable option as Resource saving is specific only to the Godot engine.
+While resource persistence was a cool, officially-supported Godot implementation for saving well- ...Resources, I already had some small experience with the JSON file format in the past. On top of that, going with JSON would be a more universally applicable option as Resource saving is specific only to the Godot engine.
 
 |Character Select|
 |----|
@@ -95,6 +95,10 @@ Going down this rabbit-hole was an experience that taught me so many clever algo
     
 > When distributing objects in a scene randomly, it is usually ideal to spread them in a way that avoids clumping.
 > One such approach is referred to as poisson-disc sampling, which utilizes a gridmap architecture to validate that object placements aren't too close to already existing objects. 
+
+|Object Distribution in 2D Space|
+|----|
+|![WorldChunkLoading](https://media.discordapp.net/attachments/1044495816489967626/1067308589489868891/193etzinfnl4hznceyotevg.png)|
 
 > By building this algorithm on top of a gridmap, you are able to reduce time complexity from O((n^2) / 2) to O(1); A huge perfomance savings.
 > This is because instead of having to compare the distances between all existing points for a new point, you only have to compare points located in grids in close proximity to the new point.
