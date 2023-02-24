@@ -100,7 +100,7 @@ Going down this rabbit-hole was an experience that taught me so many clever algo
 |----|
 |![WorldChunkLoading](https://media.discordapp.net/attachments/1044495816489967626/1067308589489868891/193etzinfnl4hznceyotevg.png)|
 
-> By building this algorithm on top of a gridmap, you are able to reduce time complexity from O((n^2) / 2) to O(1); A huge perfomance savings.
+> By building this algorithm on top of a gridmap, you are able to reduce time complexity from O(n^2) to O(1); A huge perfomance savings.
 > This is because instead of having to compare the distances between all existing points for a new point, you only have to compare points located in grids in close proximity to the new point.
 
 |Performant Chunk Loading/Unloading|
